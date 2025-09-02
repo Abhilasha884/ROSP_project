@@ -21,7 +21,6 @@ export default function Dashboard() {
     <div style={{ padding: "20px" }}>
       <h2>Energy Consumption Dashboard</h2>
 
-      {/* ✅ Raw List */}
       <ul>
         {data.map((row, idx) => (
           <li key={idx}>
@@ -30,7 +29,6 @@ export default function Dashboard() {
         ))}
       </ul>
 
-      {/* ✅ Bar Chart */}
       <h3>Consumption by Appliance</h3>
       <BarChart width={600} height={300} data={data}>
         <CartesianGrid strokeDasharray="3 3" />
@@ -41,7 +39,6 @@ export default function Dashboard() {
         <Bar dataKey="Energy Consumption (kWh)" fill="#8884d8" />
       </BarChart>
 
-      {/* ✅ Line Chart */}
       <h3>Consumption Trend</h3>
       <LineChart width={600} height={300} data={data}>
         <CartesianGrid strokeDasharray="3 3" />
@@ -51,7 +48,6 @@ export default function Dashboard() {
         <Line type="monotone" dataKey="Energy Consumption (kWh)" stroke="#82ca9d" />
       </LineChart>
 
-      {/* ✅ Pie Chart */}
       <h3>Appliance Share of Energy</h3>
       <PieChart width={400} height={400}>
         <Pie
