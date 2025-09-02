@@ -15,7 +15,7 @@ def preprocess_data(file_path="smart_home_energy_consumption_large.csv"):
 
     daily_data = df.resample('D').sum()
     weekly_data = df.resample('W').sum()
-    monthly_data = df.resample('M').sum()
+    monthly_data = df.resample('ME').sum()
 
     # features (hour, day, month) for further analysis
     df['hour'] = df.index.hour

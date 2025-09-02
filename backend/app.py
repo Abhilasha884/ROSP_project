@@ -1,45 +1,28 @@
-from flask import Flask, jsonify
-from flask_cors import CORS
 import pandas as pd
+from flask import Flask, jsonify
 
 app = Flask(__name__)
-CORS(app)
 
-from preprocess import preprocess_data
+# Load CSV
+df = pd.read_csv("smart_home_energy_consumption_large.csv")
 
-df=preprocess_data("smart_home_energy_consumption_large.csv")
-daily = df["daily"]
+# Convert Date column to datetime
+df['Date'] = pd.to_datetime(df['Date'])
 
-@app.route("/api/daily")
-def daily():
-    df['Date'] = pd.to_datetime(df['Date'])
-    daily = df.groupby('Date')['Energy Consumption (kWh)'].sum().reset_index()
-    daily.columns = ['Date', 'Consumption']
-    return jsonify(daily.to_dict(orient="records"))
+# Set Date as index
+df.set_index('Date', inplace=True)
 
-@app.route("/api/monthly")
-def monthly():
-    df['Date'] = pd.to_datetime(df['Date'])
-    monthly = df.groupby(df['Date'].dt.to_period("M"))['Energy Consumption (kWh)'].sum().reset_index()
-    monthly['Date'] = monthly['Date'].astype(str)
-    monthly.columns = ['Month', 'Consumption']
-    return jsonify(monthly.to_dict(orient="records"))
+@app.route("/api/consumption")
+def get_consumption():
+    # Resample by month and sum consumption
+    monthly_data = df.resample('ME').sum(numeric_only=True)
 
-@app.route("/api/appliance")
-def appliance():
-    appliance = df.groupby('Appliance Type')['Energy Consumption (kWh)'].mean().reset_index()
-    appliance.columns = ['Appliance', 'Consumption']
-    return jsonify(appliance.to_dict(orient="records"))
+    # Convert to JSON
+    data = [
+        {"month": idx.strftime("%Y-%m"), "consumption": val}
+        for idx, val in monthly_data['Energy Consumption (kWh)'].items()
+    ]
+    return jsonify(data)
 
-@app.route("/api/household")
-def household():
-    household = df.groupby('Household Size')['Energy Consumption (kWh)'].mean().reset_index()
-    household.columns = ['HouseholdSize', 'Consumption']
-    return jsonify(household.to_dict(orient="records"))
-
-@app.route("/api/temp-vs-energy")
-def temp_vs_energy():
-    temp = df.groupby('Outdoor Temperature (°C)')['Energy Consumption (kWh)'].mean().reset_index()
-    temp.columns = ['Temperature', 'Consumption']
-    return jsonify(temp.to_dict(orient="records"))
-
+if __name__ == "__main__":
+    app.run(debug=True)
