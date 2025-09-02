@@ -271,7 +271,6 @@ export default function Dashboard() {
   }, [year]);
 
   return (
-<<<<<<< HEAD
     <div className="p-6">
       {/* Year Filter */}
       <div className="mb-6">
@@ -280,49 +279,6 @@ export default function Dashboard() {
           value={year}
           onChange={(e) => setYear(e.target.value)}
           className="border rounded px-2 py-1"
-=======
-    <div style={{ padding: "20px" }}>
-      <h2>Energy Consumption Dashboard</h2>
-
-      <ul>
-        {data.map((row, idx) => (
-          <li key={idx}>
-            <strong>{row["Appliance Type"]}</strong> — {row["Energy Consumption (kWh)"]} kWh
-          </li>
-        ))}
-      </ul>
-
-      <h3>Consumption by Appliance</h3>
-      <BarChart width={600} height={300} data={data}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="Appliance Type" />
-        <YAxis />
-        <Tooltip />
-        <Legend />
-        <Bar dataKey="Energy Consumption (kWh)" fill="#8884d8" />
-      </BarChart>
-
-      <h3>Consumption Trend</h3>
-      <LineChart width={600} height={300} data={data}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="Appliance Type" />
-        <YAxis />
-        <Tooltip />
-        <Line type="monotone" dataKey="Energy Consumption (kWh)" stroke="#82ca9d" />
-      </LineChart>
-
-      <h3>Appliance Share of Energy</h3>
-      <PieChart width={400} height={400}>
-        <Pie
-          data={data}
-          dataKey="Energy Consumption (kWh)"
-          nameKey="Appliance Type"
-          cx="50%"
-          cy="50%"
-          outerRadius={150}
-          fill="#8884d8"
-          label
->>>>>>> 453feb774f8c3b1b5669ec6138c786659d7e2077
         >
           {availableYears.map((yr) => (
             <option key={yr} value={yr}>
@@ -379,6 +335,13 @@ export default function Dashboard() {
     </div>
   );
 }
+
+
+
+        
+
+    
+       
 
 
 
