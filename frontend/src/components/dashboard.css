@@ -27,14 +27,38 @@
 }
 
 .sidebar ul li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   padding: 12px;
   border-radius: 8px;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: background 0.3s, padding 0.3s;
+  white-space: nowrap;
+  overflow: hidden;
+  color: #fff;
+  text-decoration: none;
 }
+.sidebar ul li span.label {
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  opacity: 1;
+  visibility: visible;
+}
+.sidebar.collapsed ul li span.label {
+  opacity: 0;
+  visibility: hidden;
+  width: 0;
+}
+
 
 .sidebar ul li:hover {
   background: #334155;
+}
+
+.sidebar.collapsed ul li span {
+  opacity: 0;
+  visibility: hidden;
+  width: 0;
 }
 
 /* Collapse button */

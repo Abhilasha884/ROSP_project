@@ -522,17 +522,28 @@ export default function Dashboard() {
       {collapsed ? "☰" : "✖"}
     </button>
       <h2>⚡ CurrentTrack</h2>
-     <ul>
-      <li>
-        <Link to="/dashboard">📊 Dashboard</Link>
-      </li>
-      <li>
-        <Link to="/appliances">⚙️ Appliances</Link>
-      </li>
-      <li>
-        <Link to="/cost">💰 Cost</Link>
-      </li>
-    </ul>
+   <ul>
+    <li>
+      <Link to="/dashboard">
+        <span role="img" aria-label="dashboard">📊</span>
+        <span className="label">Dashboard</span>
+      </Link>
+    </li>
+    <li>
+      <Link to="/appliances">
+        <span role="img" aria-label="appliances">⚙️</span>
+        <span className="label">Appliances</span>
+      </Link>
+    </li>
+    <li>
+      <Link to="/cost">
+        <span role="img" aria-label="cost">💰</span>
+        <span className="label">Cost</span>
+      </Link>
+    </li>
+  </ul>
+
+
   </div>
 
       {/* Main Content */}
