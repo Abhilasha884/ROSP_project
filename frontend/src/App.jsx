@@ -1,14 +1,19 @@
 import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Dashboard from "./components/Dashboard";
-import Charts from "./components/Chart";
-
+import Appliances from "./components/Appliances";
+import Cost from "./components/Cost";
 
 export default function App() {
   return (
-    <div style={{ padding: 20, fontFamily: "system-ui, Arial" }}>
-      <h1>Electricity Consumption Dashboard</h1>
-      <Dashboard />
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/appliances" element={<Appliances />} />
+        <Route path="/cost" element={<Cost />} />
+      </Routes>
+    </Router>
   );
 }
+
 

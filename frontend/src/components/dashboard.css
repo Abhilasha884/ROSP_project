@@ -1,0 +1,116 @@
+/* Parent container */
+.dashboard-container {
+  display: flex;
+  height: 100vh; /* Full screen height */
+}
+
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  background: #1e293b;
+  color: #fff;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  transition: width 0.3s ease;
+}
+
+.sidebar.collapsed {
+  width: 60px;
+}
+
+/* Sidebar items */
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 40px;
+}
+
+.sidebar ul li {
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.sidebar ul li:hover {
+  background: #334155;
+}
+
+/* Collapse button */
+.collapse-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+  align-self: flex-end;
+}
+
+/* Main content */
+.main-content {
+  flex: 1;               /* Take remaining space */
+  padding: 20px;
+  overflow-y: auto;
+  background: #f9fafb;
+  transition: margin-left 0.3s ease;
+}
+
+.chart-placeholder {
+  height: 200px;
+  border: 2px dashed #ccc;
+  margin-top: 20px;
+}
+
+/* Stats grid */
+.stats-grid {
+  display: flex;
+  gap: 20px;
+  margin: 20px 0;
+}
+
+.stat-card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  flex: 1;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.stat-card h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #334155;
+}
+
+.stat-card p {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #111827;
+}
+.year-filter {
+  margin: 20px 0;
+  font-size: 1rem;
+}
+
+.year-filter select {
+  margin-left: 10px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+/* Remove default link styles */
+.sidebar a {
+  text-decoration: none;   /* Remove underline */
+  color: inherit;          /* Use sidebar text color */
+  display: block;          /* Make full clickable area */
+  padding: 12px;
+  border-radius: 8px;
+  transition: background 0.3s;
+}
+
+/* Hover effect same as before */
+.sidebar a:hover {
+  background: #334155;
+  color: #fff; /* Optional: brighten text on hover */
+}
