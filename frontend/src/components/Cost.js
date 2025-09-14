@@ -10,6 +10,7 @@ const UNIT_COST = 9; // ₹ per kWh
 const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff8042", "#8dd1e1"];
 
 export default function Cost() {
+  const [collapsed, setCollapsed] = useState(false);
   const [year, setYear] = useState("2023");
   const [allData, setAllData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -54,16 +55,40 @@ export default function Cost() {
 
   return (
     <div className="dashboard-container">
-      {/* Sidebar */}
-      <div className="sidebar">
-        <button className="collapse-btn">☰</button>
-        <h2>⚡ CurrentTrack</h2>
-        <ul>
-          <li><Link to="/dashboard">📊 Dashboard</Link></li>
-          <li><Link to="/appliances">⚙️ Appliances</Link></li>
-          <li><Link to="/cost">💰 Cost</Link></li>
-        </ul>
-      </div>
+     {/* Sidebar */}
+                 <div className={`sidebar ${collapsed ? "collapsed" : ""}`}>
+                 <button className="collapse-btn" onClick={() => setCollapsed(!collapsed)}>
+                 {collapsed ? "☰" : "✖"}
+               </button>
+                 <h2>⚡ CurrentTrack</h2>
+              <ul>
+               <li>
+                 <Link to="/dashboard">📊
+                   {/* <span role="img" aria-label="dashboard">📊</span> */}
+                   <span className="label">Dashboard</span>
+                 </Link>
+               </li>
+               <li>
+                 <Link to="/appliances">⚙️
+                   {/* <span role="img" aria-label="appliances">⚙️</span> */}
+                   <span className="label">Appliances</span>
+                 </Link>
+               </li>
+               <li>
+                 <Link to="/cost">💰
+                   {/* <span role="img" aria-label="cost">💰</span> */}
+                   <span className="label">Cost</span>
+                 </Link>
+               </li>
+               <li>
+                 <Link to="/prediction">🔮 
+                 <span className="label">Prediction</span>
+                 </Link>
+               </li>
+           
+             </ul>
+             </div>
+     
 
       {/* Main */}
       <div className="main-content">

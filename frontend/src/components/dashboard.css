@@ -60,6 +60,23 @@
   visibility: hidden;
   width: 0;
 }
+.sidebar h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+  white-space: nowrap;   /* prevents text from wrapping */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 1rem 0;
+  text-align: center;
+}
+
+/* When sidebar is collapsed */
+.sidebar.collapsed h2 {
+  display: block;       /* keep it visible */
+  font-size: 1.2rem;    /* slightly smaller if needed */
+  text-align: center;   /* keep centered */
+}
 
 /* Collapse button */
 .collapse-btn {

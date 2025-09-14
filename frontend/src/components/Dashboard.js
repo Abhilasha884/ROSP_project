@@ -89,23 +89,29 @@ export default function Dashboard() {
       <h2>⚡ CurrentTrack</h2>
    <ul>
     <li>
-      <Link to="/dashboard">
-        <span role="img" aria-label="dashboard">📊</span>
+      <Link to="/dashboard">📊
+        {/* <span role="img" aria-label="dashboard">📊</span> */}
         <span className="label">Dashboard</span>
       </Link>
     </li>
     <li>
-      <Link to="/appliances">
-        <span role="img" aria-label="appliances">⚙️</span>
+      <Link to="/appliances">⚙️
+        {/* <span role="img" aria-label="appliances">⚙️</span> */}
         <span className="label">Appliances</span>
       </Link>
     </li>
     <li>
-      <Link to="/cost">
-        <span role="img" aria-label="cost">💰</span>
+      <Link to="/cost">💰
+        {/* <span role="img" aria-label="cost">💰</span> */}
         <span className="label">Cost</span>
       </Link>
     </li>
+    <li>
+      <Link to="/prediction">🔮 
+      <span className="label">Prediction</span>
+      </Link>
+    </li>
+
   </ul>
 
 

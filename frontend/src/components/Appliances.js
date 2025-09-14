@@ -9,6 +9,7 @@ import "./dashboard.css";
 const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff8042", "#8dd1e1"];
 
 export default function Appliances() {
+  const [collapsed, setCollapsed] = useState(false);
   const [year, setYear] = useState("2023");
   const [data, setData] = useState([]);
 
@@ -22,15 +23,38 @@ export default function Appliances() {
   return (
     <div className="dashboard-container">
       {/* Sidebar */}
-      <div className="sidebar">
-        <button className="collapse-btn">☰</button>
-        <h2>⚡ CurrentTrack</h2>
-        <ul>
-          <li><Link to="/dashboard">📊 Dashboard</Link></li>
-          <li><Link to="/appliances">⚙️ Appliances</Link></li>
-          <li><Link to="/cost">💰 Cost</Link></li>
+            <div className={`sidebar ${collapsed ? "collapsed" : ""}`}>
+            <button className="collapse-btn" onClick={() => setCollapsed(!collapsed)}>
+            {collapsed ? "☰" : "✖"}
+          </button>
+            <h2>⚡ CurrentTrack</h2>
+         <ul>
+          <li>
+            <Link to="/dashboard">📊
+              {/* <span role="img" aria-label="dashboard">📊</span> */}
+              <span className="label">Dashboard</span>
+            </Link>
+          </li>
+          <li>
+            <Link to="/appliances">⚙️
+              {/* <span role="img" aria-label="appliances">⚙️</span> */}
+              <span className="label">Appliances</span>
+            </Link>
+          </li>
+          <li>
+            <Link to="/cost">💰
+              {/* <span role="img" aria-label="cost">💰</span> */}
+              <span className="label">Cost</span>
+            </Link>
+          </li>
+          <li>
+            <Link to="/prediction">🔮 
+            <span className="label">Prediction</span>
+            </Link>
+          </li>
+      
         </ul>
-      </div>
+        </div>
 
       {/* Main */}
       <div className="main-content">
