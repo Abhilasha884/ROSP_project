@@ -81,26 +81,29 @@ def predict_next_month():
 
         if len(app_data) > 6:  # need enough data points for ARIMA
             try:
-                # Fit ARIMA model (simple order=(1,1,1))
+                # Fit ARIMA model
                 model = ARIMA(app_data["Energy Consumption (kWh)"], order=(1, 1, 1))
                 model_fit = model.fit()
 
                 # Forecast 1 step ahead (next month)
                 forecast = model_fit.forecast(steps=1)
-                prediction = forecast.iloc[0]
+                prediction = round(float(forecast.iloc[0]), 2)
+
+                # ✅ Ensure no negative predictions
+                prediction = max(0, prediction)
 
                 # Suggestion logic
                 avg_usage = app_data["Energy Consumption (kWh)"].mean()
                 if prediction > avg_usage * 1.2:
-                    suggestion = "High predicted usage — consider reducing usage for efficiency."
+                    suggestion = "⚠️ High predicted usage — consider reducing usage for efficiency."
                 elif prediction < avg_usage * 0.8:
-                    suggestion = "Lower predicted usage — good efficiency trend!"
+                    suggestion = "✅ Lower predicted usage — good efficiency trend!"
                 else:
-                    suggestion = "Stable usage — keep monitoring."
+                    suggestion = "ℹ️ Stable usage — keep monitoring."
 
                 results.append({
                     "appliance": appliance,
-                    "predicted_consumption": round(float(prediction), 2),
+                    "predicted_consumption": prediction,
                     "suggestion": suggestion
                 })
 
@@ -111,6 +114,7 @@ def predict_next_month():
                 })
 
     return jsonify(results)
+
 
 
 if __name__ == "__main__":

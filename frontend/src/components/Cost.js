@@ -93,7 +93,17 @@ export default function Cost() {
       {/* Main */}
       <div className="main-content">
         <h1>💰 Electricity Cost Analysis</h1>
-
+         {/* Yearly Summary */}
+        <div className="stats-grid">
+          <div className="stat-card">
+            <h3>Total Consumption</h3>
+            <p>{totalConsumption} kWh</p>
+          </div>
+          <div className="stat-card">
+            <h3>Total Cost</h3>
+            <p>₹{totalCost}</p>
+          </div>
+        </div>
         {/* Year filter */}
         <div className="year-filter">
           <label>Select Year: </label>
@@ -145,17 +155,7 @@ export default function Cost() {
           </p>
         )}
 
-        {/* Yearly Summary */}
-        <div className="stats-grid">
-          <div className="stat-card">
-            <h3>Total Consumption</h3>
-            <p>{totalConsumption} kWh</p>
-          </div>
-          <div className="stat-card">
-            <h3>Total Cost</h3>
-            <p>₹{totalCost}</p>
-          </div>
-        </div>
+       
       </div>
     </div>
   );
