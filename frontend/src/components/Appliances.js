@@ -8,65 +8,83 @@ import "./dashboard.css";
 
 const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff8042", "#8dd1e1"];
 
+// Month list
+const MONTHS = [
+  { value: "All", label: "All" },
+  { value: "01", label: "January" },
+  { value: "02", label: "February" },
+  { value: "03", label: "March" },
+  { value: "04", label: "April" },
+  { value: "05", label: "May" },
+  { value: "06", label: "June" },
+  { value: "07", label: "July" },
+  { value: "08", label: "August" },
+  { value: "09", label: "September" },
+  { value: "10", label: "October" },
+  { value: "11", label: "November" },
+  { value: "12", label: "December" },
+];
+
 export default function Appliances() {
   const [collapsed, setCollapsed] = useState(false);
   const [year, setYear] = useState("2023");
+  const [month, setMonth] = useState("All");
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    fetch(`http://127.0.0.1:5000/api/appliance-consumption/${year}`)
+    let url = `http://127.0.0.1:5000/api/appliance-consumption/${year}`;
+    if (month !== "All") {
+      url += `/${month}`;  // backend should handle this
+    }
+
+    fetch(url)
       .then((res) => res.json())
       .then((json) => setData(json))
       .catch((err) => console.error("Error fetching appliance data:", err));
-  }, [year]);
+  }, [year, month]);
 
   return (
     <div className="dashboard-container">
       {/* Sidebar */}
-            <div className={`sidebar ${collapsed ? "collapsed" : ""}`}>
-            <button className="collapse-btn" onClick={() => setCollapsed(!collapsed)}>
-            {collapsed ? "☰" : "✖"}
-          </button>
-            <h2>⚡ CurrentTrack</h2>
-         <ul>
+      <div className={`sidebar ${collapsed ? "collapsed" : ""}`}>
+        <button className="collapse-btn" onClick={() => setCollapsed(!collapsed)}>
+          {collapsed ? "☰" : "✖"}
+        </button>
+        <h2>⚡ CurrentTrack</h2>
+        <ul>
           <li>
-            <Link to="/dashboard">📊
-              {/* <span role="img" aria-label="dashboard">📊</span> */}
-              <span className="label">Dashboard</span>
-            </Link>
+            <Link to="/dashboard">📊 <span className="label">Dashboard</span></Link>
           </li>
           <li>
-            <Link to="/appliances">⚙️
-              {/* <span role="img" aria-label="appliances">⚙️</span> */}
-              <span className="label">Appliances</span>
-            </Link>
+            <Link to="/appliances">⚙️ <span className="label">Appliances</span></Link>
           </li>
           <li>
-            <Link to="/cost">💰
-              {/* <span role="img" aria-label="cost">💰</span> */}
-              <span className="label">Cost</span>
-            </Link>
+            <Link to="/cost">💰 <span className="label">Cost</span></Link>
           </li>
           <li>
-            <Link to="/prediction">🔮 
-            <span className="label">Prediction</span>
-            </Link>
+            <Link to="/prediction">🔮 <span className="label">Prediction</span></Link>
           </li>
-      
         </ul>
-        </div>
+      </div>
 
       {/* Main */}
       <div className="main-content">
         <h1>⚙️ Appliance-wise Consumption</h1>
 
-        {/* Year filter */}
+        {/* Filters */}
         <div className="year-filter">
           <label>Select Year: </label>
           <select value={year} onChange={(e) => setYear(e.target.value)}>
             <option value="2023">2023</option>
             <option value="2024">2024</option>
             <option value="2025">2025</option>
+          </select>
+
+          <label style={{ marginLeft: "20px" }}>Select Month: </label>
+          <select value={month} onChange={(e) => setMonth(e.target.value)}>
+            {MONTHS.map((m) => (
+              <option key={m.value} value={m.value}>{m.label}</option>
+            ))}
           </select>
         </div>
 

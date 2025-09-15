@@ -49,6 +49,21 @@ def get_appliance_consumption_by_year(year):
     ]
     return jsonify(data)
 
+# ✅ New endpoint: Year + Month filter
+@app.route("/api/appliance-consumption/<int:year>/<int:month>")
+def get_appliance_consumption_by_year_month(year, month):
+    ym_data = df[(df.index.year == year) & (df.index.month == month)]
+    appliance_data = (
+        ym_data.groupby("Appliance Type")["Energy Consumption (kWh)"]
+        .sum()
+        .reset_index()
+    )
+    data = [
+        {"appliance": row["Appliance Type"], "consumption": row["Energy Consumption (kWh)"]}
+        for _, row in appliance_data.iterrows()
+    ]
+    return jsonify(data)
+
 @app.route("/api/predict-next-month")
 def predict_next_month():
     # Group by appliance & month
@@ -66,7 +81,7 @@ def predict_next_month():
 
         if len(app_data) > 6:  # need enough data points for ARIMA
             try:
-                # Fit ARIMA model (simple order=(1,1,1), can be tuned later)
+                # Fit ARIMA model (simple order=(1,1,1))
                 model = ARIMA(app_data["Energy Consumption (kWh)"], order=(1, 1, 1))
                 model_fit = model.fit()
 
