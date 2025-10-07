@@ -30,6 +30,7 @@ export default function Appliances() {
   const [year, setYear] = useState("2023");
   const [month, setMonth] = useState("All");
   const [data, setData] = useState([]);
+  const hasData = data.some((d) => (d?.consumption ?? 0) > 0);
 
   useEffect(() => {
     let url = `http://127.0.0.1:5000/api/appliance-consumption/${year}`;
@@ -86,6 +87,29 @@ export default function Appliances() {
               <option key={m.value} value={m.value}>{m.label}</option>
             ))}
           </select>
+
+          {/* CSV Export */}
+          {month === "All" ? (
+            <a
+              href={`http://127.0.0.1:5000/api/appliance-consumption.csv?year=${year}`}
+              target="_blank"
+              rel="noreferrer"
+              style={{ marginLeft: 20 }}
+              className="export-btn"
+            >
+              ⬇️ Export CSV
+            </a>
+          ) : (
+            <a
+              href={`http://127.0.0.1:5000/api/appliance-consumption.csv?year=${year}&month=${month}`}
+              target="_blank"
+              rel="noreferrer"
+              style={{ marginLeft: 20 }}
+              className="export-btn"
+            >
+              ⬇️ Export CSV
+            </a>
+          )}
         </div>
 
         <div className="charts-grid">
@@ -101,23 +125,35 @@ export default function Appliances() {
           </ResponsiveContainer>
 
           {/* Pie Chart */}
-          <ResponsiveContainer width="100%" height={300}>
-            <PieChart>
-              <Pie
-                data={data}
-                dataKey="consumption"
-                nameKey="appliance"
-                outerRadius={120}
-                label
-              >
-                {data.map((entry, index) => (
-                  <Cell key={index} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-              <Tooltip />
-              <Legend />
-            </PieChart>
-          </ResponsiveContainer>
+          {hasData ? (
+            <ResponsiveContainer width="100%" height={300}>
+              <PieChart>
+                <Pie
+                  data={data}
+                  dataKey="consumption"
+                  nameKey="appliance"
+                  outerRadius={120}
+                  label
+                >
+                  {data.map((entry, index) => (
+                    <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip />
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
+          ) : (
+            <div style={{
+              height: 300,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#6b7280'
+            }}>
+              No appliance data for the selected period.
+            </div>
+          )}
         </div>
       </div>
     </div>

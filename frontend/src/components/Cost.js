@@ -6,52 +6,56 @@ import {
 } from "recharts";
 import "./dashboard.css";
 
-const UNIT_COST = 9; // ₹ per kWh
+const DEFAULT_RATE = 9; // ₹ per kWh
 const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff8042", "#8dd1e1"];
 
 export default function Cost() {
   const [collapsed, setCollapsed] = useState(false);
   const [year, setYear] = useState("2023");
-  const [allData, setAllData] = useState([]);
-  const [filteredData, setFilteredData] = useState([]);
+  const [rate, setRate] = useState(DEFAULT_RATE);
+  const [items, setItems] = useState([]);
+  const [totals, setTotals] = useState({ totalConsumption: 0, totalCost: 0 });
+  const [homes, setHomes] = useState([]);
+  const [homeId, setHomeId] = useState("All");
 
-  // Fetch all years once
+  // INR currency formatter (Indian numbering system)
+  const inr = new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'INR',
+    maximumFractionDigits: 2,
+  });
+
+  // Load homes list
   useEffect(() => {
-    fetch("http://127.0.0.1:5000/api/consumption")
-      .then((res) => res.json())
-      .then((json) => setAllData(json))
-      .catch((err) => console.error("Error fetching cost data:", err));
+    fetch("http://127.0.0.1:5000/api/homes")
+      .then((r) => r.json())
+      .then((j) => setHomes(j.homes || []))
+      .catch((e) => console.error("Error loading homes:", e));
   }, []);
 
-  // Filter by selected year & normalize keys
+  // Fetch monthly costs for selected filters
   useEffect(() => {
-    const filtered = allData.filter(
-      (d) => d.month && d.month.startsWith(year)
-    );
-
-    const normalized = filtered.map((item) => {
-      const consumption =
-        item.consumption ??
-        item.Consumption ??
-        item["Energy Consumption (kWh)"] ??
-        0;
-
-      return {
-        ...item,
-        consumption,
-        cost: Number((consumption * UNIT_COST).toFixed(2)),
-      };
-    });
-
-    setFilteredData(normalized);
-  }, [year, allData]);
+    const url = new URL("http://127.0.0.1:5000/api/cost/consumption");
+    url.searchParams.set("year", year);
+    url.searchParams.set("rate", rate);
+    if (homeId !== "All") {
+      url.searchParams.set("home_id", homeId);
+    }
+    fetch(url.toString())
+      .then((res) => res.json())
+      .then((json) => {
+        setItems(json.items || []);
+        setTotals({
+          totalConsumption: json.total_consumption || 0,
+          totalCost: json.total_cost || 0,
+        });
+      })
+      .catch((err) => console.error("Error fetching cost data:", err));
+  }, [year, rate, homeId]);
 
   // Totals
-  const totalConsumption = filteredData.reduce(
-    (sum, item) => sum + item.consumption,
-    0
-  );
-  const totalCost = (totalConsumption * UNIT_COST).toFixed(2);
+  const totalConsumption = totals.totalConsumption;
+  const totalCost = totals.totalCost;
 
   return (
     <div className="dashboard-container">
@@ -101,10 +105,10 @@ export default function Cost() {
           </div>
           <div className="stat-card">
             <h3>Total Cost</h3>
-            <p>₹{totalCost}</p>
+            <p>{inr.format(totalCost)}</p>
           </div>
         </div>
-        {/* Year filter */}
+        {/* Year, Home & Tariff */}
         <div className="year-filter">
           <label>Select Year: </label>
           <select value={year} onChange={(e) => setYear(e.target.value)}>
@@ -112,40 +116,68 @@ export default function Cost() {
             <option value="2024">2024</option>
             <option value="2025">2025</option>
           </select>
+
+          <label style={{ marginLeft: "20px" }}>Home: </label>
+          <select value={homeId} onChange={(e) => setHomeId(e.target.value)}>
+            <option value="All">All</option>
+            {homes.map((h) => (
+              <option key={h} value={h}>{h}</option>
+            ))}
+          </select>
+
+          <label style={{ marginLeft: "20px" }}>Tariff (₹/kWh): </label>
+          <input
+            type="number"
+            min="0"
+            step="0.1"
+            value={rate}
+            onChange={(e) => setRate(Number(e.target.value))}
+            style={{ width: 100 }}
+          />
+
+          <a
+            href={`http://127.0.0.1:5000/api/consumption.csv?start=${year}-01&end=${year}-12`}
+            target="_blank"
+            rel="noreferrer"
+            style={{ marginLeft: 20 }}
+            className="export-btn"
+          >
+            ⬇️ Export CSV
+          </a>
         </div>
 
         {/* Bar Chart */}
-        <h2>Monthly Electricity Cost ({year})</h2>
+        <h2>Monthly Electricity Cost ({year}{homeId !== "All" ? ` • Home ${homeId}` : ""})</h2>
         <ResponsiveContainer width="100%" height={350}>
-          <BarChart data={filteredData}>
+          <BarChart data={items}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="month" />
             <YAxis />
-            <Tooltip formatter={(val) => `₹${val}`} />
+            <Tooltip formatter={(val) => inr.format(val)} />
             <Legend />
-            <Bar dataKey="cost" fill="#ff8042" name="Cost (₹)" />
+            <Bar dataKey="cost" fill="#ff8042" name="Cost (INR)" />
           </BarChart>
         </ResponsiveContainer>
 
         {/* Pie Chart */}
         <h2 style={{ marginTop: "30px" }}>Cost Distribution ({year})</h2>
-        {filteredData.length > 1 ? (
+        {items.length > 1 ? (
           <ResponsiveContainer width="100%" height={350}>
             <PieChart>
               <Pie
-                data={filteredData}
+                data={items}
                 dataKey="cost"
                 nameKey="month"
                 cx="50%"
                 cy="50%"
                 outerRadius={120}
-                label={({ month, cost }) => `${month}: ₹${cost}`}
+                label={({ month, cost }) => `${month}: ${inr.format(cost)}`}
               >
-                {filteredData.map((entry, index) => (
+                {items.map((entry, index) => (
                   <Cell key={index} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
-              <Tooltip formatter={(val) => `₹${val}`} />
+              <Tooltip formatter={(val) => inr.format(val)} />
               <Legend />
             </PieChart>
           </ResponsiveContainer>

@@ -75,7 +75,16 @@ export default function Dashboard() {
       const filtered = monthlyData.filter(
         (item) => item.month.split("-")[0] === selectedYear
       );
-      setFilteredData(filtered);
+
+      // Pad to ensure all 12 months exist for the selected year
+      const months = Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, "0"));
+      const map = new Map(filtered.map((d) => [d.month, d.consumption]));
+      const padded = months.map((mm) => {
+        const key = `${selectedYear}-${mm}`;
+        return { month: key, consumption: map.get(key) ?? 0 };
+      });
+
+      setFilteredData(padded);
     }
   }, [selectedYear, monthlyData]);
 
@@ -153,6 +162,29 @@ export default function Dashboard() {
               </option>
             ))}
           </select>
+
+          {/* CSV Export */}
+          {selectedYear === "All" ? (
+            <a
+              href={`http://127.0.0.1:5000/api/consumption.csv`}
+              target="_blank"
+              rel="noreferrer"
+              style={{ marginLeft: 20 }}
+              className="export-btn"
+            >
+              ⬇️ Export CSV
+            </a>
+          ) : (
+            <a
+              href={`http://127.0.0.1:5000/api/consumption.csv?start=${selectedYear}-01&end=${selectedYear}-12`}
+              target="_blank"
+              rel="noreferrer"
+              style={{ marginLeft: 20 }}
+              className="export-btn"
+            >
+              ⬇️ Export CSV
+            </a>
+          )}
         </div>
 
         {/* Monthly Bar Chart */}
