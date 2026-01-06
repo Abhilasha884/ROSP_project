@@ -38,6 +38,7 @@
   overflow: hidden;
   color: #fff;
   text-decoration: none;
+  font-size: 1.3rem;
 }
 .sidebar ul li span.label {
   transition: opacity 0.3s ease, visibility 0.3s ease;
@@ -61,7 +62,7 @@
   width: 0;
 }
 .sidebar h2 {
-  font-size: 1.5rem;
+  font-size: 1.7rem;
   font-weight: bold;
   color: white;
   white-space: nowrap;   /* prevents text from wrapping */

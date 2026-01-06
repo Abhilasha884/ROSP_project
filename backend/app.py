@@ -68,7 +68,6 @@ def get_consumption():
     # Resample to month-end totals
     monthly_data = df.resample('M').sum(numeric_only=True)
 
-    # Create a complete monthly index from min to max month-end
     if not monthly_data.empty:
         start = monthly_data.index.min().to_period('M').to_timestamp('M')
         end = monthly_data.index.max().to_period('M').to_timestamp('M')
@@ -88,7 +87,6 @@ def get_consumption():
 
 @app.route("/api/consumption.csv")
 def get_consumption_csv():
-    # Optional start/end in YYYY-MM
     start = request.args.get('start')
     end = request.args.get('end')
     cache_key = f"consumption_csv_{start}_{end}"
@@ -140,7 +138,6 @@ def get_appliance_consumption():
         df.groupby("Appliance Type")["Energy Consumption (kWh)"]
         .sum()
     )
-    # Zero-pad for all known appliances
     data = [
         {
             "appliance": app,
@@ -205,7 +202,6 @@ def get_appliance_consumption_by_year(year):
     resp.headers['Cache-Control'] = f'public, max-age={_TTL_SECONDS}'
     return resp
 
-# ✅ New endpoint: Year + Month filter
 @app.route("/api/appliance-consumption/<int:year>/<int:month>")
 def get_appliance_consumption_by_year_month(year, month):
     ym_data = df[(df.index.year == year) & (df.index.month == month)]
@@ -227,10 +223,9 @@ def get_appliance_consumption_by_year_month(year, month):
 @app.route('/api/cost/consumption')
 def get_cost_consumption():
     year = request.args.get('year', type=int)
-    rate = request.args.get('rate', default=9.0, type=float)
+    rate = request.args.get('rate', default=6.0, type=float)
     home_id = request.args.get('home_id', type=int)
 
-    # Scope the dataframe to the selected home if provided
     scope = df
     if home_id is not None:
         scope = scope[scope['Home ID'] == home_id]

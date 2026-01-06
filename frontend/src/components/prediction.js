@@ -1,10 +1,9 @@
-// src/components/Prediction.js
 import React, { useEffect, useState } from "react";
+import Sidebar from "./Sidebar";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, Legend
 } from "recharts";
-import { Link } from "react-router-dom";
 import "./dashboard.css";
 
 const COLORS = ["#4f46e5", "#10b981", "#f59e0b", "#ef4444", "#6366f1", "#14b8a6"];
@@ -51,27 +50,7 @@ export default function Prediction() {
 
   return (
     <div className="dashboard-container">
-      {/* Sidebar */}
-      <div className={`sidebar ${collapsed ? "collapsed" : ""}`}>
-        <button className="collapse-btn" onClick={() => setCollapsed(!collapsed)}>
-          {collapsed ? "☰" : "✖"}
-        </button>
-        <h2>⚡ CurrentTrack</h2>
-        <ul>
-          <li>
-            <Link to="/dashboard">📊 <span className="label">Dashboard</span></Link>
-          </li>
-          <li>
-            <Link to="/appliances">⚙️ <span className="label">Appliances</span></Link>
-          </li>
-          <li>
-            <Link to="/cost">💰 <span className="label">Cost</span></Link>
-          </li>
-          <li>
-            <Link to="/prediction">🔮 <span className="label">Prediction</span></Link>
-          </li>
-        </ul>
-      </div>
+      <Sidebar />
 
       {/* Main Content */}
       <div className={`main-content ${collapsed ? "collapsed" : ""}`}>

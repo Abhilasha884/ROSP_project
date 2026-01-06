@@ -3,8 +3,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, LineChart, Line
 } from "recharts";
-import { Link } from "react-router-dom";
-
+import Sidebar from "./Sidebar";
 import "./dashboard.css";
 
 export default function Dashboard() {
@@ -76,7 +75,6 @@ export default function Dashboard() {
         (item) => item.month.split("-")[0] === selectedYear
       );
 
-      // Pad to ensure all 12 months exist for the selected year
       const months = Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, "0"));
       const map = new Map(filtered.map((d) => [d.month, d.consumption]));
       const padded = months.map((mm) => {
@@ -90,43 +88,8 @@ export default function Dashboard() {
 
   return (
     <div className="dashboard-container">
-      {/* Sidebar */}
-      <div className={`sidebar ${collapsed ? "collapsed" : ""}`}>
-      <button className="collapse-btn" onClick={() => setCollapsed(!collapsed)}>
-      {collapsed ? "☰" : "✖"}
-    </button>
-      <h2>⚡ CurrentTrack</h2>
-   <ul>
-    <li>
-      <Link to="/dashboard">📊
-        {/* <span role="img" aria-label="dashboard">📊</span> */}
-        <span className="label">Dashboard</span>
-      </Link>
-    </li>
-    <li>
-      <Link to="/appliances">⚙️
-        {/* <span role="img" aria-label="appliances">⚙️</span> */}
-        <span className="label">Appliances</span>
-      </Link>
-    </li>
-    <li>
-      <Link to="/cost">💰
-        {/* <span role="img" aria-label="cost">💰</span> */}
-        <span className="label">Cost</span>
-      </Link>
-    </li>
-    <li>
-      <Link to="/prediction">🔮 
-      <span className="label">Prediction</span>
-      </Link>
-    </li>
+      <Sidebar />
 
-  </ul>
-
-
-  </div>
-
-      {/* Main Content */}
       <div className={`main-content ${collapsed ? "collapsed" : ""}`}>
         <h1>⚡ Electricity Consumption Dashboard</h1>
 

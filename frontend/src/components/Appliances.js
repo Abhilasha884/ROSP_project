@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import Sidebar from "./Sidebar";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, PieChart, Pie, Cell, Legend
@@ -46,31 +46,11 @@ export default function Appliances() {
 
   return (
     <div className="dashboard-container">
-      {/* Sidebar */}
-      <div className={`sidebar ${collapsed ? "collapsed" : ""}`}>
-        <button className="collapse-btn" onClick={() => setCollapsed(!collapsed)}>
-          {collapsed ? "☰" : "✖"}
-        </button>
-        <h2>⚡ CurrentTrack</h2>
-        <ul>
-          <li>
-            <Link to="/dashboard">📊 <span className="label">Dashboard</span></Link>
-          </li>
-          <li>
-            <Link to="/appliances">⚙️ <span className="label">Appliances</span></Link>
-          </li>
-          <li>
-            <Link to="/cost">💰 <span className="label">Cost</span></Link>
-          </li>
-          <li>
-            <Link to="/prediction">🔮 <span className="label">Prediction</span></Link>
-          </li>
-        </ul>
-      </div>
+      <Sidebar />
 
       {/* Main */}
       <div className="main-content">
-        <h1>⚙️ Appliance-wise Consumption</h1>
+        <h1> Appliance-wise Consumption</h1>
 
         {/* Filters */}
         <div className="year-filter">
@@ -78,7 +58,6 @@ export default function Appliances() {
           <select value={year} onChange={(e) => setYear(e.target.value)}>
             <option value="2023">2023</option>
             <option value="2024">2024</option>
-            <option value="2025">2025</option>
           </select>
 
           <label style={{ marginLeft: "20px" }}>Select Month: </label>
